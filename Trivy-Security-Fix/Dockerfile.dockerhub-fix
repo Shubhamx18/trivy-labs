@@ -1,0 +1,10 @@
+# Use this to patch your existing DockerHub image
+# Replace shubhamm18/YOUR_IMAGE_NAME with your actual image
+
+FROM shubhamm18/YOUR_IMAGE_NAME:latest
+
+# Upgrade all fixable OS-level packages
+RUN apk update && apk upgrade --no-cache \
+    libpng \
+    busybox \
+    ssl_client

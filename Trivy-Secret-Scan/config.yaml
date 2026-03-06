@@ -1,0 +1,16 @@
+# ⚠️  DEMO ONLY — All values are fake
+# Created for Trivy secret scanning practice
+
+app:
+  name: trivy-labs
+  debug: true
+
+database:
+  host: localhost
+  port: 5432
+  user: admin
+  password: Admin@12345
+
+aws:
+  access_key: AKIA123456FAKEKEY
+  secret_key: fakeSecretKeyYamlDemo123

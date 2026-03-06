@@ -1,0 +1,6 @@
+nginx:mainline
+redis:alpine
+postgres:15-alpine
+alpine:latest
+python:3.11-slim
+node:lts-alpine

@@ -1,0 +1,8 @@
+FROM python:3.10-slim
+
+# pip not upgraded — older pip version has known CVEs
+RUN pip install flask
+
+COPY app.py .
+
+CMD ["python", "app.py"]
