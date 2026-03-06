@@ -5,7 +5,6 @@ This repo covers everything from installation to a full DevSecOps pipeline — w
 every command explained, and real examples from actual practice sessions.
 
 > All labs are done on **Ubuntu (AWS EC2)** — Linux only.
-
 ---
 
 ## 📖 What is Trivy?
@@ -99,20 +98,5 @@ trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --no-progres
 ```
 
 If vulnerabilities are found → pipeline fails → deployment is blocked.
-
----
-
-## ✅ What We Practiced
-
-- Installed Trivy on Ubuntu EC2
-- Scanned Docker images
-- Understood CVE and CVSS scoring
-- Generated JSON reports
-- Filtered by severity
-- Used exit codes for pipelines
-- Fixed vulnerabilities in dependencies
-- Rebuilt Docker image
-- Rescanned image
-- Pushed fixed image to DockerHub
 
 ---
