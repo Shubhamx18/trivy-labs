@@ -87,6 +87,9 @@ scp -i your-key.pem ubuntu@your-ec2-ip:/home/ubuntu/trivy-report.html ./trivy-re
 
 Then open `trivy-report.html` in your browser.
 
+### Example HTML Report Output
+
+![Trivy HTML Report](trivy-html-report.png)
 
 ---
 
