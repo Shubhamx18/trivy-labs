@@ -1,10 +1,10 @@
 # 🔐 Trivy
-
 Hands-on security scanning labs built while learning Trivy on Ubuntu/Linux.
 This repo covers everything from installation to a full DevSecOps pipeline — with clear notes,
 every command explained, and real examples from actual practice sessions.
 
 > All labs are done on **Ubuntu (AWS EC2)** — Linux only.
+
 ---
 
 ## 📖 What is Trivy?
@@ -34,15 +34,18 @@ trivy image nginx
 
 ```
 trivy-labs/
-├── 01-setup/               → Install Trivy on Ubuntu EC2, understand CVEs and architecture
-├── 02-first-scan/          → Scan Docker images, understand the output table
-├── 03-flags-and-filters/   → --severity, --exit-code, --ignore-unfixed and more
-├── 04-fix-cves/            → Find vulnerabilities and fix them properly
-├── 05-secret-detection/    → Detect hardcoded secrets in code and configs
-├── 06-html-reports/        → Generate JSON, HTML, and SBOM reports
-├── 07-automation/          → Full DevSecOps security workflow script
-├── 08-alternatives/        → Grype and Docker Scout vs Trivy
-└── 09-bulk-scanning/       → Scan multiple images at once from a list
+├── 01-setup/                     → Install Trivy on Ubuntu EC2, understand CVEs and architecture
+├── 02-first-scan/                → Scan Docker images, understand the output table
+├── 03-flags-and-filters/         → --severity, --exit-code, --ignore-unfixed and more
+├── 04-fix-cves/                  → Find vulnerabilities and fix them properly
+├── 05-secret-detection/          → Detect hardcoded secrets in code and configs
+├── 06-html-reports/              → Generate JSON, HTML, and SBOM reports
+├── 07-automation/                → Full DevSecOps security workflow script
+├── 08-alternatives/              → Grype and Docker Scout vs Trivy
+├── 09-bulk-scanning/             → Scan multiple images at once from a list
+├── trivy-jenkins-docker-project/ → 🚀 Full Jenkins + Docker CI/CD pipeline with Trivy scanning
+├── README.md
+└── trivy_cheet_sheet.pdf
 ```
 
 ---
@@ -100,3 +103,14 @@ trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --no-progres
 If vulnerabilities are found → pipeline fails → deployment is blocked.
 
 ---
+
+## 🚀 Jenkins + Docker Pipeline
+
+The `trivy-jenkins-docker-project/` folder contains a full working Jenkins declarative pipeline that:
+
+- Builds a Python Docker image on every push
+- Automatically scans it with Trivy
+- Generates JSON, HTML, and CycloneDX SBOM reports
+- Blocks deployment if HIGH or CRITICAL vulnerabilities are found
+
+👉 See the [project README](./trivy-jenkins-docker-project/README.md) for full EC2 setup, installation, and pipeline walkthrough.
