@@ -21,15 +21,15 @@ Used widely in DevSecOps pipelines alongside Jenkins, GitHub Actions, and GitLab
 
 ```
 trivy-labs/
-├── Trivy-Installation/         → Install Trivy on Ubuntu EC2, verify setup
-├── Trivy-Image-Scan/           → Scan Docker images, understand CVE output
-├── Trivy-Flags/                → --severity, --exit-code, --vuln-type flags
-├── Trivy-Security-Fix/         → Identify and fix vulnerabilities in images
-├── Trivy-Secret-Scan/          → Detect hardcoded secrets in code and configs
-├── Trivy-Reports/              → Generate and share HTML vulnerability reports
-├── Trivy-Automation/           → Shell scripts for automated scanning
-├── Trivy-Alternatives/         → Grype and Docker Scout vs Trivy
-└── Trivy-Bulk-Scan/            → Scan multiple images from a list
+├── 01-setup/                   → Install Trivy on Ubuntu EC2, verify setup
+├── 02-first-scan/              → Scan Docker images, understand CVE output
+├── 03-flags-and-filters/       → --severity, --exit-code, --vuln-type flags
+├── 04-fix-cves/                → Identify and fix vulnerabilities in images
+├── 05-secret-detection/        → Detect hardcoded secrets in code and configs
+├── 06-html-reports/            → Generate and share HTML vulnerability reports
+├── 07-automation/              → Shell scripts for automated scanning
+├── 08-alternatives/            → Grype and Docker Scout vs Trivy
+└── 09-bulk-scanning/           → Scan multiple images from a list
 ```
 
 ---
