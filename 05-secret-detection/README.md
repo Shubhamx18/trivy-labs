@@ -113,6 +113,13 @@ trivy fs --scanners secret .
 
 Trivy will flag each file with the exact line number and type of secret found.
 
+### Example Scan Output
+
+![Trivy Secret Scan Output](secret-scan-output.png)
+
+The scan above detected:
+- **`app.py`** — AWS Access Key ID (CRITICAL) at line 3
+- **`values.json`** — Stripe Secret Token (CRITICAL) at line 3
 
 ---
 
