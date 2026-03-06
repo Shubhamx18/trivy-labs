@@ -1,7 +1,9 @@
-# Automating Trivy Scans
+# 07 — Automation
 
-Running scans manually is fine for learning and one-off checks.
-In real DevSecOps setups, security scanning is automated — on a schedule, on every build, or before every deployment.
+> Environment: Ubuntu 22.04 LTS — AWS EC2 t2.micro
+
+Running scans manually works for learning and one-off checks.
+In real DevSecOps setups, security scanning is automated — triggered on every build, before every deployment, or on a nightly schedule.
 
 ---
 
@@ -9,52 +11,112 @@ In real DevSecOps setups, security scanning is automated — on a schedule, on e
 
 | Script | What it does |
 |--------|-------------|
-| `scan.sh` | Prompts for an image name, runs a scan, saves a `.txt` report with timestamp |
-| `scan-html.sh` | Same as above but saves an `.html` report instead |
-
-All reports are saved inside the `reports/` folder with a timestamp in the filename so old scans are never overwritten.
+| `scan.sh` | Prompts for image name, runs scan, saves timestamped `.txt` report |
+| `scan-html.sh` | Same but saves an `.html` report |
+| `trivy-security-workflow.sh` | Full end-to-end DevSecOps workflow — build, scan, fix, rebuild, push |
 
 ---
 
-## How to Use
+## Script 1 — scan.sh (Text Report)
+
+### How to use
 
 ```bash
 # Give execute permission
-chmod +x scan.sh scan-html.sh
+chmod +x scan.sh
 
-# Run text report
+# Run it
 ./scan.sh
+```
 
-# Run HTML report
+When prompted enter the image name, for example: `nginx:latest`
+
+Report is saved to `reports/trivy-2026-03-01_09-30.txt`
+
+---
+
+## Script 2 — scan-html.sh (HTML Report)
+
+### How to use
+
+```bash
+chmod +x scan-html.sh
 ./scan-html.sh
 ```
 
-When prompted, type the image name. Example: `nginx:latest`
+Enter image name when prompted.
+
+Report is saved to `reports/trivy-2026-03-01_09-30.html`
+
 
 ---
 
-## Output Structure
+## Script 3 — trivy-security-workflow.sh (Full DevSecOps Pipeline)
+
+This is the most important script. It demonstrates the **complete security workflow** from start to finish:
 
 ```
-reports/
-├── trivy-2026-03-01_09-30.txt
-├── trivy-2026-03-01_09-45.html
+Build Docker image
+       ↓
+List images
+       ↓
+Scan with Trivy (all vulnerabilities)
+       ↓
+Scan only HIGH and CRITICAL
+       ↓
+CI/CD scan (fail if vulnerabilities found)
+       ↓
+Create patch Dockerfile to fix vulnerable dependency
+       ↓
+Build patched image
+       ↓
+Verify new image
+       ↓
+Scan patched image
+       ↓
+Login to DockerHub
+       ↓
+Push secure image
+       ↓
+Final scan ignoring unfixed
 ```
 
-> 📸 Add screenshot → script running and report being saved
+### How to create and run it
 
----
+**Step 1 — Create the script file**
 
-## Real-World Usage
+```bash
+nano trivy-security-workflow.sh
+```
 
-- **Cron job** → scan all images every night, save reports for review
-- **CI/CD stage** → run `scan.sh` after every Docker build in the pipeline
-- **Pre-deployment check** → block deployment if HIGH/CRITICAL found
+**Step 2 — Paste this content:**
 
----
+```bash
+#!/bin/bash
 
-## Notes
+echo "===== STEP 1: Build Initial Docker Image ====="
+docker build -t shubhamm18/webapp:02 .
 
-- Only **HIGH** and **CRITICAL** are included in the output — keeps reports focused and actionable.
-- `mkdir -p reports` inside the scripts ensures the output folder is created automatically.
-- Timestamp format `%Y-%m-%d_%H-%M` keeps reports sortable by date in any file browser.
+echo "===== STEP 2: List Docker Images ====="
+docker images
+
+echo "===== STEP 3: Scan Image with Trivy ====="
+trivy image shubhamm18/webapp:02
+
+echo "===== STEP 4: Scan Only HIGH and CRITICAL ====="
+trivy image --severity HIGH,CRITICAL shubhamm18/webapp:02
+
+echo "===== STEP 5: Scan for CI/CD (Fail if Vulnerabilities Found) ====="
+trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --no-progress shubhamm18/webapp:02
+
+echo "===== STEP 6: Create Patch Dockerfile to Fix Dependency ====="
+
+cat <<EOF > Dockerfile.patch
+FROM shubhamm18/webapp:02
+
+WORKDIR /app
+
+# Fix vulnerable dependency
+RUN npm install cross-spawn@7.0.5
+
+CMD ["npm", "start"]

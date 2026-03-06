@@ -1,23 +1,33 @@
-# Trivy Alternatives — Grype and Docker Scout
+# 08 — Alternatives
 
-Trivy is the most popular container security scanner, but it is not the only one.
-This section covers two common alternatives and how they compare — based on actual hands-on testing.
+> Environment: Ubuntu 22.04 LTS — AWS EC2 t2.micro
+
+Trivy is the most widely used container security scanner, but it is not the only one.
+This section covers two common alternatives — Grype and Docker Scout — and how they compare.
 
 ---
 
 ## 1. Grype (by Anchore)
 
 Grype is a fast, open-source vulnerability scanner.
-It is simpler than Trivy — focused purely on vulnerability scanning with no secret or config scanning.
+It is simpler than Trivy — focused purely on vulnerability scanning with no secret or config detection.
 
-### Install
+### Install on Linux (Ubuntu)
 
 ```bash
-# macOS
-brew install grype
-
-# Linux
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+```
+
+| Part | What it does |
+|------|-------------|
+| `curl -sSfL` | Downloads the install script silently |
+| `sh -s --` | Runs the script |
+| `-b /usr/local/bin` | Installs the binary to this folder so you can run it from anywhere |
+
+Verify the install:
+
+```bash
+grype version
 ```
 
 GitHub → https://github.com/anchore/grype
@@ -25,38 +35,45 @@ GitHub → https://github.com/anchore/grype
 ### Scan an image
 
 ```bash
-grype python:3.10-slim
+grype nginx:latest
 ```
 
-> 📸 Add screenshot → Grype scan output
+
+### Grype vs Trivy — What is different?
+
+Grype output looks very similar to Trivy but it is missing secret detection, config scanning, and HTML reports.
+Use it when you want a lightweight, single-purpose scanner.
 
 ---
 
 ## 2. Docker Scout
 
-Docker Scout is built directly into the Docker CLI and Docker Desktop.
-Its standout feature is telling you exactly which base image tag to upgrade to in order to fix vulnerabilities.
+Docker Scout is built directly into the Docker CLI.
+Its standout feature is telling you exactly which base image tag to upgrade to in order to reduce vulnerabilities — not just listing the CVEs.
 
 ### Prerequisites
 
-- Docker account (free)
-- Logged into Docker CLI
+- Docker account (free) — sign up at hub.docker.com
+- Docker CLI installed and logged in
+
+### Login to Docker
 
 ```bash
 docker login
 ```
 
+Enter your DockerHub username and password when prompted.
+
 ### Commands
 
 ```bash
-# Quick summary of vulnerabilities
-docker scout quickview python:3.10-slim
+# Quick summary — shows total CVEs by severity
+docker scout quickview nginx:latest
 
 # Full CVE list with details
-docker scout cves python:3.10-slim
+docker scout cves nginx:latest
 ```
 
-> 📸 Add screenshot → `docker scout quickview` output
 
 ---
 
@@ -68,43 +85,48 @@ docker scout cves python:3.10-slim
 | Filesystem scanning | ✅ | ✅ | ❌ |
 | Secret detection | ✅ | ❌ | ❌ |
 | Misconfiguration scanning | ✅ | ❌ | ❌ |
-| SBOM generation | ✅ | ✅ (with Syft) | ✅ |
+| SBOM generation | ✅ | ✅ with Syft | ✅ |
 | Base image fix suggestions | ❌ | ❌ | ✅ |
-| Visual dashboard | ❌ | ❌ | ✅ Docker Desktop |
-| Needs account | ❌ | ❌ | ✅ Docker Hub |
+| HTML reports | ✅ | ❌ | ❌ |
+| JSON output | ✅ | ✅ | ✅ |
+| Needs account | ❌ | ❌ | ✅ DockerHub |
 | CI/CD integration | ✅ | ✅ | ✅ |
-| Completely offline | ✅ | ✅ | ❌ |
+| Works fully offline | ✅ | ✅ | ❌ |
+| Free | ✅ | ✅ | ✅ basic |
 
 ---
 
 ## When to Use Each
 
 **Use Trivy when:**
-- You need one tool that does everything (images + filesystem + secrets + configs)
+- You need one tool that does everything — images, filesystem, secrets, configs
 - You want zero account setup
-- You are integrating into Jenkins, GitHub Actions, or GitLab CI
+- You are integrating into a CI/CD pipeline
+- You need HTML reports
 
 **Use Grype when:**
 - You only need fast image scanning
-- You are already using Syft for SBOM and want a scanner that pairs with it
-- You prefer a minimal, single-purpose tool
+- You want a minimal, single-purpose tool
+- You are already using Syft for SBOM generation and want a matching scanner
 
 **Use Docker Scout when:**
-- You want actionable "upgrade to this tag" recommendations
+- You want "upgrade to this base image tag" recommendations
 - You are already using Docker Desktop and want a visual dashboard
-- You need Docker Hub integration for team visibility
+- You need DockerHub integration for team-wide visibility
 
 ---
 
 ## Recommendation
 
-For most DevSecOps setups, start with **Trivy** — it covers the most ground with zero setup.
-Add **Docker Scout** if you need base image upgrade suggestions.
+For most DevSecOps work on Linux — stick with **Trivy**.
+It covers the most ground, needs no account, and fits perfectly into CI/CD pipelines.
+
+Add **Docker Scout** alongside it if you want base image upgrade recommendations.
 
 ---
 
 ## Notes
 
-- Docker Scout requires `docker login` even for public images — this felt unnecessary during testing.
-- Grype's output is almost identical to Trivy's but missing the secret and config columns.
-- Trivy's HTML report is much more useful than what either alternative generates by default.
+- Docker Scout requires `docker login` even for public image scans
+- Grype output is almost identical to Trivy but missing the secrets and config columns
+- Trivy is the industry standard for container security scanning in DevSecOps pipelines

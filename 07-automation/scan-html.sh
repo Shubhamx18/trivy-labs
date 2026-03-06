@@ -8,7 +8,7 @@ REPORT_DIR="reports"
 
 mkdir -p "$REPORT_DIR"
 
-# Download html.tpl if not present
+# Download html.tpl if not already present
 if [[ ! -f html.tpl ]]; then
     echo "Downloading HTML template..."
     wget -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -O html.tpl
