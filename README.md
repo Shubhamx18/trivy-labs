@@ -116,16 +116,3 @@ If vulnerabilities are found → pipeline fails → deployment is blocked.
 - Pushed fixed image to DockerHub
 
 ---
-
-## 🚀 Next Topics to Learn
-
-After Trivy, the next tools in the DevSecOps toolchain:
-- **SonarQube** — static code analysis
-- **Argo CD** — GitOps continuous delivery
-- **Falco** — runtime security monitoring
-
----
-
-## 👤 Author
-
-**Shubhamx18** — documented during hands-on Trivy practice on Ubuntu EC2.
