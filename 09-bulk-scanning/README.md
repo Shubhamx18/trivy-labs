@@ -1,6 +1,6 @@
 # 09 — Bulk Scanning
 
-> Environment: Ubuntu 22.04 LTS — AWS EC2 t2.micro
+> Environment: Ubuntu 22.04 LTS — AWS EC2 t2.micro instances 
 
 Instead of scanning images one by one, this script reads a list from `images.txt`
 and generates a separate HTML report for each image automatically.
