@@ -7,7 +7,7 @@ every command explained, and real examples from actual practice sessions.
 
 ---
 
-## 📖 What is Trivy?
+## 📖 What is Trivy ?
 
 Trivy is a free, open-source security scanner developed by Aqua Security.
 
